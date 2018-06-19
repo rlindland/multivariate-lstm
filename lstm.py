@@ -39,19 +39,7 @@ optimizer = optim.Adam(model.parameters())
 
 with torch.no_grad():
 
-	train_X	= torch.from_numpy(np.load('train_X.npy'))
-	train_y	= torch.from_numpy(np.load('train_y.npy'))
-	test_X	= torch.from_numpy(np.load('test_X.npy'))
-	test_y	= torch.from_numpy(np.load('test_y.npy'))
 	
-	unbatched_data = train_X
-	unbatched_labels = train_y
-
-	temp_d, temp_l = train_X.split(train_X.shape[0]//72, dim=0), train_y.split(train_y.shape[0]//72, dim=0)
-	data, labels = torch.cat(temp_d[:-1], dim=1), torch.cat(temp_l[:-1])
-	print(data.shape, labels.shape)
-
-	print(model(data[:5]).view(1,1,-1))
 
 for epoch in range(EPOCH):
 	cumloss = 0
