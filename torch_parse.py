@@ -9,13 +9,31 @@ test_y	= torch.from_numpy(np.load('test_y.npy'))
 unbatched_data = train_X
 unbatched_labels = train_y
 
-for dset in [train_X, train_y, test_X, test_y]:
-	temp_d = train_X.split(train_X.shape[0]//72, dim=0)
-	if len(dset.shape)>1: dset = torch.cat(temp_d[:-1], dim=1)
-	else: dset = torch.cat(temp_d[:-1], dim=1)
-	print(dset.shape)
+sets = []
 
-torch.save(train_X, 'train_X.pt')
-torch.save(train_y, 'train_y.pt')
-torch.save(test_X, 'test_X.pt')
-torch.save(test_y, 'test_y.pt')
+for dset in [train_X, test_X]:
+	temp_d = dset.split(72, dim=0) #should be (72)
+	out = torch.cat(temp_d[:-1], dim=1)
+	print(out.shape)
+	sets.append(out)
+
+	dset = dset[1:]
+	temp_d = dset.split(72, dim=0)
+	out = torch.cat(temp_d[:-1], dim=1)
+	print(out.shape)
+	sets.append(out)
+
+torch.save(sets[0], 'train_X.pt')
+torch.save(sets[1], 'train_y.pt')
+torch.save(sets[2], 'test_X.pt')
+torch.save(sets[3], 'test_y.pt')
+
+x = sets[0]
+y = sets[1]
+
+for batch in range(y.shape[1]):
+	for row in range(y.shape[0]):
+		if batch==120 and row==71: pass
+		elif row == y.shape[0]-1: 
+			if y[row, batch, 0]!=x[0, batch+1, 0]: print(row, batch)
+		elif y[row, batch, 0]!=x[row+1, batch, 0]: print(row, batch)
