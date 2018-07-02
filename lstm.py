@@ -16,12 +16,10 @@ class MultiLstm(nn.Module):
 	def __init__(self, input_dim, hidden_dim, num_layers=1, batch_size=1):
 		
 		super(MultiLstm, self).__init__()
-
 		self.hidden_dim = hidden_dim
 		self.num_layers = num_layers
 		self.batch_size = batch_size
 		self.hidden = self.init_hidden()
-
 		self.lstm = nn.LSTM(input_size=input_dim, hidden_size=hidden_dim, num_layers=num_layers)
 		self.linear = nn.Linear(hidden_dim, 8)
 
@@ -36,21 +34,21 @@ class MultiLstm(nn.Module):
 	
 model = MultiLstm(8, HIDDEN_DIM, NUM_LAYERS, 1)
 loss_function = nn.MSELoss()
-optimizer = optim.Adam(model.parameters())
+optimizer = optim.SGD(model.parameters(), lr=.001)
 
 with torch.no_grad():
 	data = torch.load('train_X.pt')
 	labels = torch.load('train_y.pt')
-
-	data = torch.load('test_X.pt')
-	labels = torch.load('test_y.pt')
-
+	# data = torch.load('test_X.pt')
+	# labels = torch.load('test_y.pt')
 	print(model(data[:3,0,:].view(3,1,data.shape[2])))
 
 for epoch in range(EPOCH):
 	cumloss = 0
 	for i in range(data.shape[1]):
 		model.zero_grad()
+		optimizer.zero_grad()
+
 		model.hidden = model.init_hidden()
 
 		out = model(data[:,i,:].view(data.shape[0],1,data.shape[2]))
