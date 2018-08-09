@@ -34,65 +34,65 @@ class MultiGRU(nn.Module):
 		vecs = self.linear(gru_out)
 		return vecs
 	
-model = MultiGRU(8, HIDDEN_DIM, NUM_LAYERS, 1)
-loss_function = nn.L1Loss(size_average=True)
-optimizer = optim.Adam(model.parameters())
-# for name, param in model.named_parameters():
-#     if param.requires_grad:
-#         print(name)
+# model = MultiGRU(8, HIDDEN_DIM, NUM_LAYERS, 1)
+# loss_function = nn.L1Loss(size_average=True)
+# optimizer = optim.Adam(model.parameters())
+# # for name, param in model.named_parameters():
+# #     if param.requires_grad:
+# #         print(name)
 
-with torch.no_grad():
-	data = torch.load('train_X.pt')
-	labels = torch.load('train_y.pt')
-	val_x = torch.load('val_X.pt')
-	val_y = torch.load('val_y.pt')
-	print(model(data[:3,0,:].view(3,1,data.shape[2])))
-	lossx = [i for i in range(EPOCH)]
-	valx= [i for i in range(EPOCH)]
-	lossy,valy= [],[]
+# with torch.no_grad():
+# 	data = torch.load('train_X.pt')
+# 	labels = torch.load('train_y.pt')
+# 	val_x = torch.load('val_X.pt')
+# 	val_y = torch.load('val_y.pt')
+# 	print(model(data[:3,0,:].view(3,1,data.shape[2])))
+# 	lossx = [i for i in range(EPOCH)]
+# 	valx= [i for i in range(EPOCH)]
+# 	lossy,valy= [],[]
 
-for epoch in range(EPOCH):
-	cumloss=0
-	valloss=0
-	model.zero_grad()
-	optimizer.zero_grad()
-	model.hidden = model.init_hidden()
+# for epoch in range(EPOCH):
+# 	cumloss=0
+# 	valloss=0
+# 	model.zero_grad()
+# 	optimizer.zero_grad()
+# 	model.hidden = model.init_hidden()
 
-	out = model(data)
-	loss=loss_function(out, labels)
-	loss.backward()
-	optimizer.step()
-	cumloss += float(loss.data)
-	lossy.append(cumloss)
-	with torch.no_grad():
-		out_val = model(val_x)
-		loss_val = loss_function(out_val, val_y)
-		valloss += float(loss_val.data)
-		valy.append(valloss)
-	print('Epoch:', epoch+1,'/', EPOCH, '| Training Loss:', cumloss, '| Validation Loss:', valloss)
+# 	out = model(data)
+# 	loss=loss_function(out, labels)
+# 	loss.backward()
+# 	optimizer.step()
+# 	cumloss += float(loss.data)
+# 	lossy.append(cumloss)
+# 	with torch.no_grad():
+# 		out_val = model(val_x)
+# 		loss_val = loss_function(out_val, val_y)
+# 		valloss += float(loss_val.data)
+# 		valy.append(valloss)
+# 	print('Epoch:', epoch+1,'/', EPOCH, '| Training Loss:', cumloss, '| Validation Loss:', valloss)
 
 
 
-	# for i in range(data.shape[1]):
-	# 	model.zero_grad()
-	# 	optimizer.zero_grad()
+# 	# for i in range(data.shape[1]):
+# 	# 	model.zero_grad()
+# 	# 	optimizer.zero_grad()
 
-	# 	model.hidden = model.init_hidden()
+# 	# 	model.hidden = model.init_hidden()
 
-	# 	out = model(data[:,i,:].view(data.shape[0],1,data.shape[2]))
+# 	# 	out = model(data[:,i,:].view(data.shape[0],1,data.shape[2]))
 
-	# 	loss = loss_function(out, labels[:,i,:].view(labels.shape[0],1,labels.shape[2]))
-	# 	loss.backward()
-	# 	optimizer.step()
-	# 	cumloss += float(loss.data)
+# 	# 	loss = loss_function(out, labels[:,i,:].view(labels.shape[0],1,labels.shape[2]))
+# 	# 	loss.backward()
+# 	# 	optimizer.step()
+# 	# 	cumloss += float(loss.data)
 
-	# print('Epoch:', epoch+1,'/', EPOCH, '| Epoch Loss:', cumloss)
+# 	# print('Epoch:', epoch+1,'/', EPOCH, '| Epoch Loss:', cumloss)
 
-with torch.no_grad(): 
-	print(model(val_x[:3,0,:].view(3,1,data.shape[2])))
-	print(val_y[:3,0,:].view(3,1,labels.shape[2]))
-	torch.save(model.state_dict(), 'gru.pt')
+# with torch.no_grad(): 
+# 	print(model(val_x[:3,0,:].view(3,1,data.shape[2])))
+# 	print(val_y[:3,0,:].view(3,1,labels.shape[2]))
+# 	torch.save(model.state_dict(), 'gru.pt')
 
-	plt.plot(valx, valy, 'b')
-	plt.plot(lossx, lossy, 'r')
-	plt.show()
+# 	plt.plot(valx, valy, 'b')
+# 	plt.plot(lossx, lossy, 'r')
+# 	plt.show()
