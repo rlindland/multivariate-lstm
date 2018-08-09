@@ -37,3 +37,6 @@ for batch in range(y.shape[1]):
 		elif row == y.shape[0]-1: 
 			if y[row, batch, 0]!=x[0, batch+1, 0]: print(row, batch)
 		elif y[row, batch, 0]!=x[row+1, batch, 0]: print(row, batch)
+
+torch.save(sets[2][:,0,:].view(72,1,8), 'val_X.pt')
+torch.save(sets[3][:,0,:].view(72,1,8), 'val_y.pt')

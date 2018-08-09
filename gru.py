@@ -13,16 +13,16 @@ HIDDEN_DIM=32
 NUM_LAYERS=128
 BATCH_SIZE=72
 
-class MultiLstm(nn.Module):
+class MultiGRU(nn.Module):
 
 	def __init__(self, input_dim, hidden_dim, num_layers=1, batch_size=1):
 		
-		super(MultiLstm, self).__init__()
+		super(MultiGRU, self).__init__()
 		self.hidden_dim = hidden_dim
 		self.num_layers = num_layers
 		self.batch_size = batch_size
 		self.hidden = self.init_hidden()
-		self.lstm = nn.LSTM(input_size=input_dim, hidden_size=hidden_dim, num_layers=num_layers)
+		self.gru = nn.GRU(input_size=input_dim, hidden_size=hidden_dim, num_layers=num_layers)
 		self.linear = nn.Linear(hidden_dim, 8)
 
 	
@@ -30,11 +30,11 @@ class MultiLstm(nn.Module):
 		return (torch.zeros(self.num_layers,1,self.hidden_dim), torch.zeros(self.num_layers,1,self.hidden_dim))
  
 	def forward(self, data):
-		lstm_out, hidden = self.lstm(data)
-		vecs = self.linear(lstm_out)
+		gru_out, hidden = self.gru(data)
+		vecs = self.linear(gru_out)
 		return vecs
 	
-model = MultiLstm(8, HIDDEN_DIM, NUM_LAYERS, 1)
+model = MultiGRU(8, HIDDEN_DIM, NUM_LAYERS, 1)
 loss_function = nn.L1Loss(size_average=True)
 optimizer = optim.Adam(model.parameters())
 # for name, param in model.named_parameters():
@@ -91,7 +91,7 @@ for epoch in range(EPOCH):
 with torch.no_grad(): 
 	print(model(val_x[:3,0,:].view(3,1,data.shape[2])))
 	print(val_y[:3,0,:].view(3,1,labels.shape[2]))
-	torch.save(model.state_dict(), 'lstm.pt')
+	torch.save(model.state_dict(), 'gru.pt')
 
 	plt.plot(valx, valy, 'b')
 	plt.plot(lossx, lossy, 'r')
