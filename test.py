@@ -164,7 +164,7 @@ avgs_gru = []
 avgs_lstm = []
 for lyr in nums:
 	print("GRU Layers:", lyr)
-	if lyr = 64: epoch = 100
+	if lyr ==64: epoch = 100
 	elif lyr > 64: epoch = 200
 	else: epoch = 60 
 	avgs_gru.append(tt('gru', 32, lyr, epoch))
