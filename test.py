@@ -154,7 +154,7 @@ def tt(modelt, hidden, lyr, epochh):
 				out_val = model(val_x)
 				loss_val = loss_function(out_val, val_y)
 				valloss += float(loss_val.data)
-			print('      Epoch:', epoch+1,'/', EPOCH, '| Training Loss:', cumloss, '| Validation Loss:', valloss)
+			print('      Epoch:', epoch+1,'/', epochh, '| Training Loss:', cumloss, '| Validation Loss:', valloss)
 		out+=valloss
 	return out/10
 
