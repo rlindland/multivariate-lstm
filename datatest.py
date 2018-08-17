@@ -6,15 +6,25 @@ import numpy as np
 # import matplotlib.pyplot as plt
 from gru import MultiGRU
 from lstm import MultiLstm
+from rnn import MultiRNN
+import matplotlib.pyplot as plt
 
 np.random.seed(69)
 torch.manual_seed(69)
 
+# plt.xlabel('Smarts')
+# plt.ylabel('Probability')
+# plt.title('Histogram of IQ')
+# plt.plot([1,2,3,4], [1,4,7,2], color='r', label='fuk')
+# plt.legend()
+# plt.show()
+
 def tt(modelt, data, labels):
-	out=0
-	for i in range(10):
+	outt=0
+	for i in range(5):
 		if modelt=='gru': model = MultiGRU(8,32,5,1)
 		elif modelt=='lstm': model = MultiLstm(8,32,5,1)
+		elif modelt=='rnn': model = MultiRNN(8,32,5,1)
 		print("   Run:", i)
 		loss_function = nn.L1Loss(size_average=True)
 		optimizer = optim.Adam(model.parameters())
@@ -41,27 +51,46 @@ def tt(modelt, data, labels):
 				loss_val = loss_function(out_val, val_y)
 				valloss += float(loss_val.data)
 			print('      Epoch:', epoch+1,'/', 60, '| Training Loss:', cumloss, '| Validation Loss:', valloss)
-		out+=valloss
-	return out/10
+		outt+=valloss
+		print(valloss)
+	print(outt)
+	return outt/5
 
-train1 = torch.load('train1.pt')
-train2 = torch.load('train2.pt')
-train3 = torch.load('train3.pt')
-train4 = torch.load('train4.pt')
-
-trainy1 = torch.load('trainy1.pt')
-trainy2 = torch.load('trainy2.pt')
-trainy3 = torch.load('trainy3.pt')
-trainy4 = torch.load('trainy4.pt')
-
-sets = [(train1, trainy1), (train2, trainy2), (train3, trainy3), (train4, trainy4)]
 avgs_gru = []
 avgs_lstm = []
-for data,lables in sets:
-	print("GRU Layers:", lyr) 
+avgs_rnn = []
+counter = 1
+for i in range(20):
+	data=torch.load(str(i)+'x')
+	labels=torch.load(str(i)+'y')
+	print("RNN Layers:", counter) 
+	avgs_rnn.append(tt('rnn', data, labels))
+	counter+=1
+counter = 1
+for i in range(20):
+	data=torch.load(str(i)+'x')
+	labels=torch.load(str(i)+'y')
+	print("GRU Layers:", counter) 
 	avgs_gru.append(tt('gru', data, labels))
-for lyr in nums:
-	print("LSTM Layers:", lyr)
+	counter+=1
+counter = 1
+for i in range(20):
+	data=torch.load(str(i)+'x')
+	labels=torch.load(str(i)+'y')
+	print("lstm Layers:", counter) 
 	avgs_lstm.append(tt('lstm', data, labels))
+	counter+=1
 print(avgs_gru)
 print(avgs_lstm)
+print(avgs_rnn)
+
+xs = [i for i in range(1,401,20)]
+
+plt.xlabel('Batches')
+plt.ylabel('Validation MAE')
+plt.title('Neural Net Performance')
+plt.plot(xs, avgs_gru, color='g', label='GRU')
+plt.plot(xs, avgs_lstm, color='b', label='LSTM')
+plt.plot(xs, avgs_rnn, color='r', label='RNN')
+plt.legend()
+plt.show()

@@ -6,6 +6,7 @@ import numpy as np
 # import matplotlib.pyplot as plt
 from gru import MultiGRU
 from lstm import MultiLstm
+from rnn import MultiRNN
 
 np.random.seed(69)
 torch.manual_seed(69)
@@ -15,6 +16,7 @@ def tt(modelt, hidden, lyr, epochh):
 	for i in range(10):
 		if modelt=='gru': model = MultiGRU(8,hidden,lyr,1)
 		elif modelt=='lstm': model = MultiLstm(8,hidden,lyr,1)
+	elif modelt=='rnn': model = MultiRnn(8,hidden,lyr,1)
 		print("   Run:", i)
 		loss_function = nn.L1Loss(size_average=True)
 		optimizer = optim.Adam(model.parameters())
