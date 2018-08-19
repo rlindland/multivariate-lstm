@@ -124,21 +124,21 @@ torch.manual_seed(69)
 
 def tt(modelt, hidden, lyr, epochh):
 	out=0
-	for i in range(10):
-		if modelt=='gru': model = MultiGRU(8,hidden,lyr,1)
-		elif modelt=='lstm': model = MultiLstm(8,hidden,lyr,1)
+	for i in range(1):
+		if modelt=='gru': model = MultiGRU(28,hidden,lyr,1)
+		elif modelt=='lstm': model = MultiLstm(28,hidden,lyr,1)
 		print("   Run:", i)
 		loss_function = nn.L1Loss(size_average=True)
 		optimizer = optim.Adam(model.parameters())
 		model.zero_grad()
 
 		with torch.no_grad():
-			data = torch.load('apptrainx.pt')
-			labels = torch.load('apptrainy.pt')
-			val_x = torch.load('appvalx.pt')
-			val_y = torch.load('appvaly.pt')
+			data = torch.load('apptrainx.pt').float()
+			labels = torch.load('apptrainy.pt').float()
+			val_x = torch.load('appvalx.pt').float()
+			val_y = torch.load('appvaly.pt').float()
 		
-		for epoch in range(epochh):
+		for epoch in range(7000):
 			cumloss=0
 			valloss=0
 			model.zero_grad()
@@ -156,10 +156,10 @@ def tt(modelt, hidden, lyr, epochh):
 				valloss += float(loss_val.data)
 			print('      Epoch:', epoch+1,'/', epochh, '| Training Loss:', cumloss, '| Validation Loss:', valloss)
 		out+=valloss
-	return out/10
+	return out
 
 
-nums = [1,16,32,64,128,256]
+nums = [1,16,32,64,128]
 avgs_gru = []
 avgs_lstm = []
 epoch = 300
@@ -169,12 +169,12 @@ for lyr in nums:
 for lyr in nums:
 	print("LSTM Layers:", lyr)
 	avgs_lstm.append(tt('lstm', 32, lyr, epoch))
-print(avgs_gru)
-print(avgs_lstm)
+print('done', avgs_gru)
+print('done', avgs_lstm)
 
 glyr = avgs_gru.index(min(avgs_gru))
 llyr = avgs_lstm.index(min(avgs_lstm))
-nums = [1,16,32,64,128,256]
+nums = [1,16,32,64,128]
 avgs_gru2 = []
 avgs_lstm2 = []
 for dim in nums:
