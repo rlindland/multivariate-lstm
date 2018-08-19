@@ -23,7 +23,7 @@ class MultiLstm(nn.Module):
 		self.batch_size = batch_size
 		self.hidden = self.init_hidden()
 		self.lstm = nn.LSTM(input_size=input_dim, hidden_size=hidden_dim, num_layers=num_layers)
-		self.linear = nn.Linear(hidden_dim, 8)
+		self.linear = nn.Linear(hidden_dim, input_dim)
 
 	
 	def init_hidden(self): 

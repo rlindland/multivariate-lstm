@@ -53,6 +53,12 @@ nums = [1,16,32,64,128,256]
 avgs_gru = []
 avgs_lstm = []
 for dim in nums:
+	print("RNN dims:", dim)
+	if dim == 64: epoch = 100
+	elif dim > 64: epoch = 200
+	else: epoch = 60 
+	avgs_lstm.append(tt('lstm', dim, 32, epoch))
+for dim in nums:
 	print("GRU dims:", dim)
 	if dim == 64: epoch = 100
 	elif dim > 64: epoch = 200
