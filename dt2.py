@@ -24,7 +24,7 @@ def tt(modelt, data, labels):
 	for i in range(3):
 		if modelt=='gru': model = MultiGRU(28,16,16,1)
 		elif modelt=='lstm': model = MultiLstm(28,16,16,1)
-		elif modelt=='rnn': model = MultiRNN(28,16,16,1)
+		elif modelt=='rnn': model = MultiRNN(28,32,32,1)
 		print("   Run:", i)
 		loss_function = nn.L1Loss(size_average=True)
 		optimizer = optim.Adam(model.parameters())
@@ -34,7 +34,7 @@ def tt(modelt, data, labels):
 			val_x = torch.load('appvalx.pt').float()
 			val_y = torch.load('appvaly.pt').float()
 		
-		for epoch in range(60):
+		for epoch in range(100):
 			cumloss=0
 			valloss=0
 			model.zero_grad()

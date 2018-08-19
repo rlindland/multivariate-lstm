@@ -133,10 +133,10 @@ def tt(modelt, hidden, lyr, epochh):
 		model.zero_grad()
 
 		with torch.no_grad():
-			data = torch.load('train_X.pt')
-			labels = torch.load('train_y.pt')
-			val_x = torch.load('val_X.pt')
-			val_y = torch.load('val_y.pt')
+			data = torch.load('apptrainx.pt')
+			labels = torch.load('apptrainy.pt')
+			val_x = torch.load('appvalx.pt')
+			val_y = torch.load('appvaly.pt')
 		
 		for epoch in range(epochh):
 			cumloss=0
@@ -162,19 +162,28 @@ def tt(modelt, hidden, lyr, epochh):
 nums = [1,16,32,64,128,256]
 avgs_gru = []
 avgs_lstm = []
+epoch = 300
 for lyr in nums:
 	print("GRU Layers:", lyr)
-	if lyr == 64: epoch = 100
-	elif lyr > 64: epoch = 200
-	else: epoch = 60 
 	avgs_gru.append(tt('gru', 32, lyr, epoch))
 for lyr in nums:
 	print("LSTM Layers:", lyr)
-	if lyr == 64: epoch = 100
-	elif lyr > 64: epoch = 200
-	else: epoch = 60 
 	avgs_lstm.append(tt('lstm', 32, lyr, epoch))
 print(avgs_gru)
 print(avgs_lstm)
+
+glyr = avgs_gru.index(min(avgs_gru))
+llyr = avgs_lstm.index(min(avgs_lstm))
+nums = [1,16,32,64,128,256]
+avgs_gru2 = []
+avgs_lstm2 = []
+for dim in nums:
+	print("GRU Layers:", glyr)
+	avgs_gru2.append(tt('gru', dim, glyr, epoch))
+for lyr in nums:
+	print("LSTM Layers:", llyr)
+	avgs_lstm2.append(tt('lstm', dim, llyr, epoch))
+print(avgs_gru2)
+print(avgs_lstm2)
 
 
