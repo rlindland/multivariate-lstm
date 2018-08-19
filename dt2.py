@@ -34,7 +34,7 @@ def tt(modelt, data, labels):
 			val_x = torch.load('appvalx.pt').float()
 			val_y = torch.load('appvaly.pt').float()
 		
-		for epoch in range(7000):
+		for epoch in range(15000):
 			cumloss=0
 			valloss=0
 			model.zero_grad()
@@ -59,27 +59,27 @@ def tt(modelt, data, labels):
 avgs_gru = []
 avgs_lstm = []
 avgs_rnn = []
-counter = 1
-for i in range(20):
+counter = 20
+for i in range(20,-1,-1):
 	data=torch.load('app'+str(i)+'x').float()
 	labels=torch.load('app'+str(i)+'y').float()
 	print("RNN Layers:", counter) 
 	avgs_rnn.append(tt('rnn', data, labels))
-	counter+=1
-counter = 1
-for i in range(20):
+	counter-=1
+counter =20
+for i in range(20,-1,-1):
 	data=torch.load('app'+str(i)+'x').float()
 	labels=torch.load('app'+str(i)+'y').float()
 	print("GRU Layers:", counter) 
 	avgs_gru.append(tt('gru', data, labels))
-	counter+=1
-counter = 1
-for i in range(20):
+	counter-=1
+counter = 20
+for i in range(20,-1,-1):
 	data=torch.load('app'+str(i)+'x').float()
 	labels=torch.load('app'+str(i)+'y').float()
 	print("lstm Layers:", counter) 
 	avgs_lstm.append(tt('lstm', data, labels))
-	counter+=1
+	counter-=1
 print(avgs_gru)
 print(avgs_lstm)
 print(avgs_rnn)
