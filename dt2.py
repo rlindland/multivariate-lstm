@@ -21,7 +21,7 @@ torch.manual_seed(69)
 
 def tt(modelt, data, labels):
 	outt=0
-	for i in range(3):
+	for i in range(1):
 		if modelt=='gru': model = MultiGRU(28,16,16,1)
 		elif modelt=='lstm': model = MultiLstm(28,16,16,1)
 		elif modelt=='rnn': model = MultiRNN(28,16,16,1)
@@ -54,32 +54,32 @@ def tt(modelt, data, labels):
 		outt+=valloss
 		print(valloss)
 	print(outt)
-	return outt/3
+	return outt
 
 avgs_gru = []
 avgs_lstm = []
 avgs_rnn = []
-counter = 20
-for i in range(20,-1,-1):
+counter = 1
+for i in range(20):
 	data=torch.load('app'+str(i)+'x').float()
 	labels=torch.load('app'+str(i)+'y').float()
 	print("RNN Layers:", counter) 
 	avgs_rnn.append(tt('rnn', data, labels))
-	counter-=1
-counter =20
-for i in range(20,-1,-1):
+	counter+=1
+counter =1
+for i in range(20):
 	data=torch.load('app'+str(i)+'x').float()
 	labels=torch.load('app'+str(i)+'y').float()
 	print("GRU Layers:", counter) 
 	avgs_gru.append(tt('gru', data, labels))
-	counter-=1
-counter = 20
-for i in range(20,-1,-1):
+	counter+=1
+counter = 1
+for i in range(20):
 	data=torch.load('app'+str(i)+'x').float()
 	labels=torch.load('app'+str(i)+'y').float()
 	print("lstm Layers:", counter) 
 	avgs_lstm.append(tt('lstm', data, labels))
-	counter-=1
+	counter+=1
 print(avgs_gru)
 print(avgs_lstm)
 print(avgs_rnn)
